@@ -26,7 +26,7 @@ ht_path="$1"
 
 last=$(date +%s)
 inotifywait -m -r \
-  --exclude '/\.git/|/\.#' \
+  --exclude '/\.git/|/\.#|/#' \
   --format '%e: %w%f' \
   -e 'modify,moved_to,moved_from,move,create,delete' \
   "$ht_path" \
