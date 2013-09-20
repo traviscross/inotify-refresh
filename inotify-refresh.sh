@@ -7,7 +7,7 @@ tab_title=""
 ht_path=""
 
 usage() {
-  echo "$0 [-b <browser title>] [-t <tab title>] <path>">&1
+  echo "usage: $0 [-b <browser title>] [-t <tab title>] <path>">&1
   exit 1
 }
 
