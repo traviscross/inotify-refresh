@@ -7,13 +7,22 @@ tab_title=""
 ht_path=""
 
 usage() {
-  echo "$0 <tab title> <path>">&1
+  echo "$0 [-b <browser title>] [-t <tab title>] <path>">&1
   exit 1
 }
 
-if [ "$#" -lt 2 ]; then usage; fi
-tab_title="$1"
-ht_path="$2"
+while getopts 'b:dht:' o "$@"; do
+  case "$o" in
+    b) browser="$OPTARG";;
+    d) set -vx;;
+    h) usage;;
+    t) tab_title="$OPTARG";;
+  esac
+done
+shift $(($OPTIND-1))
+
+if [ "$#" -lt 1 ]; then usage; fi
+ht_path="$1"
 
 last=$(date +%s)
 inotifywait -m -r --exclude '.#.*' \
