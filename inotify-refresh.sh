@@ -39,7 +39,7 @@ inotifywait -m -r \
   --format '%e %w%f' \
   -e 'modify,moved_to,moved_from,move,create,delete' \
   "$ht_path" \
-  | while read ev fl; do
+  | while read -r ev fl; do
   echo "$ev $fl" >&1
   now=$(date +%s)
   if [ "$ev" != "DELETE" ]; then
