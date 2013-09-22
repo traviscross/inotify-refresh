@@ -2,7 +2,7 @@
 ##### -*- mode:shell-script; indent-tabs-mode:nil; sh-basic-offset:2 -*-
 ##### Author: Travis Cross <tc@traviscross.com>
 
-browser="Chromium"
+browser="Chromium|Chrome|Iceweasel|Firefox"
 tab_title=""
 ht_path=""
 do_chown=false
@@ -48,10 +48,14 @@ inotifywait -m -r \
   fi
   if test $((now > last+1)) -eq 1; then
     last=$now
-    br=$(xdotool search --onlyvisible --name "${tab_title}.*${browser}$" | tail -n1)
-    if [ -n "$br" ]; then
+    br () { xdotool search --onlyvisible --name "${tab_title}.*(${browser})$" $@; }
+    if [ -n "$(br)" ]; then
       echo "refreshing...">&1
-      xdotool key --clearmodifiers --window $br 'F5'
+      br key --clearmodifiers --window %@ 'F5'
+      xs=$(br | while read x; do
+            printf "%s" " windowfocus $x key --clearmodifiers F5"; done)
+      xs="$xs windowfocus $(xdotool getactivewindow)"
+      xdotool $xs
     fi
   fi
 done
