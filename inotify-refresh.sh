@@ -11,7 +11,7 @@ do_chmod=false
 perms=""
 
 usage() {
-  echo "usage: $0 [-b <browser title>] [-o <owner[:group]>] [-p <perm mode>] [-t <tab title>] <path>">&1
+  echo "usage: $0 [-b <browser title>] [-o <owner[:group]>] [-p <perm mode>] [-t <tab title>] <path>">&2
   exit 1
 }
 
@@ -40,7 +40,7 @@ inotifywait -m -r \
   -e 'modify,moved_to,moved_from,move,create,delete' \
   "$ht_path" \
   | while read -r ev fl; do
-  echo "$ev $fl" >&1
+  echo "$ev $fl" >&2
   now=$(date +%s)
   if [ "$ev" != "DELETE" ]; then
     $do_chown && chown "$owner" "$fl"
@@ -50,7 +50,7 @@ inotifywait -m -r \
     last=$now
     br () { xdotool search --onlyvisible --name "${tab_title}.*(${browser})$" $@; }
     if [ -n "$(br)" ]; then
-      echo "refreshing...">&1
+      echo "refreshing...">&2
       br key --clearmodifiers --window %@ 'F5'
       xs=$(br | while read x; do
             printf "%s" " windowfocus $x key --clearmodifiers F5"; done)
